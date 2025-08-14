@@ -6,7 +6,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 
 # import tools 
-from tools import get_merchant_status, check_traffic, notify_customer
+from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat
 
 # load env variable (api key)
 load_dotenv()
@@ -21,7 +21,7 @@ if not os.getenv("GOOGLE_API_KEY"):
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0)
 
 # define list of tools
-tools = [get_merchant_status, check_traffic, notify_customer]
+tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat]
 
 # Create the Agent Prompt
 prompt = ChatPromptTemplate.from_messages([

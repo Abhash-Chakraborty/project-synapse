@@ -40,3 +40,20 @@ def notify_customer(customer_id: str, message: str) -> str:
     print(f"--- Calling Tool: notify_customer for customer: {customer_id} ---")
     print(f"Message: '{message}'")
     return f"Notification successfully sent to customer {customer_id}."
+
+@tool
+def contact_recipient_via_chat(customer_id: str, message: str) -> str:
+    """
+    Initiates a chat with the recipient to ask for instructions.
+    Simulates the recipient's response.
+    """
+    print(f"--- Calling Tool: contact_recipient_via_chat for customer: {customer_id} ---")
+    print(f"Message to recipient: '{message}'")
+    
+    # Simulate different recipient responses
+    responses = [
+        "Response from recipient: 'I'm not home, please leave it with the concierge at the front desk.'",
+        "Response from recipient: 'Oh no, I'm running 10 minutes late! Can the driver wait?'",
+        "Response from recipient: 'I did not order anything. Please cancel this delivery.'"
+    ]
+    return random.choice(responses)
