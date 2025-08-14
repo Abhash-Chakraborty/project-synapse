@@ -6,7 +6,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 
 # import tools 
-from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants
+from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker
 
 # load env variable (api key)
 load_dotenv()
@@ -21,7 +21,7 @@ if not os.getenv("GOOGLE_API_KEY"):
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0)
 
 # define list of tools
-tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants]
+tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker]
 
 # Create the Agent Prompt
 prompt = ChatPromptTemplate.from_messages([
@@ -37,12 +37,18 @@ prompt = ChatPromptTemplate.from_messages([
     5.  **Repeat**: Continue this "Reason, Act, Observe" loop until the disruption is fully resolved.
 
     **Your Available Tools Are:**
-    - `get_merchant_status(merchant_name: str)`: Checks a restaurant's or store's current status and prep time. Use this for issues related to order preparation.
-    - `check_traffic(route: str)`: Checks the traffic conditions for a specified route. Use this for potential travel delays.
-    - `notify_customer(customer_id: str, message: str)`: Sends a direct notification to a customer. Use this to communicate updates, delays, or resolutions.
-    - `contact_recipient_via_chat(customer_id: str, message: str)`: Contacts a package recipient to get instructions when they are unavailable. Use this for delivery-point issues.
+    - `get_merchant_status(merchant_name: str)`: Checks a restaurant's or store's current status and prep time.
+    - `check_traffic(route: str)`: Checks the traffic conditions for a specified route.
+    - `notify_customer(customer_id: str, message: str)`: Sends a direct notification to a customer.
+    - `contact_recipient_via_chat(customer_id: str, message: str)`: Contacts a package recipient to get instructions.
+    - `reroute_driver(driver_id: str, new_task_description: str)`: Assigns a new task to a driver to prevent them from being idle.
+    - `get_nearby_merchants(cuisine_type: str)`: Finds alternative merchants with a similar cuisine.
 
-    You must always think step-by-step and show your work. When you have a final answer or a complete resolution plan, state it clearly.
+    **Key Directives:**
+    - **Customer-First:** If an order is significantly delayed or cancelled, your priority is to help the customer. After notifying them, always try to suggest alternatives by using `get_nearby_merchants`.
+    - **Assume Information:** If you need a `cuisine_type` to find alternatives, make a reasonable assumption based on the merchant's name (e.g., 'The Gourmet Kitchen' is likely 'Fine Dining' or 'Italian').
+
+    You must always think step-by-step and show your work.
     """),
     ("human", "{input}"),
     ("placeholder", "{agent_scratchpad}"),

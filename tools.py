@@ -76,3 +76,22 @@ def get_nearby_merchants(cuisine_type: str) -> str:
     print(f"--- Calling Tool: get_nearby_merchants for cuisine: {cuisine_type} ---")
     # In a real scenario, this would query a database. Here, we simulate.
     return f"Found nearby merchants: 'Pizza Pronto' and 'Italiano Fast' are operating normally."
+
+@tool
+def suggest_safe_drop_off(address: str) -> str:
+    """
+    Analyzes a delivery address to suggest a safe drop-off location.
+    Use this after a recipient has given permission but hasn't specified a location.
+    """
+    print(f"--- Calling Tool: suggest_safe_drop_off for address: {address} ---")
+    # In a real-world scenario, this might check building type, etc.
+    return "Safe drop-off location found: 'Building Concierge/Reception'. Please confirm with recipient."
+
+@tool
+def find_nearby_locker(address: str) -> str:
+    """
+    Finds a secure parcel locker near a given address.
+    Use this as a last resort if no safe drop-off is possible.
+    """
+    print(f"--- Calling Tool: find_nearby_locker for address: {address} ---")
+    return "Found nearby secure locker: 'ParcelHub Locker #78B' at the corner of Main St and 1st Ave."
