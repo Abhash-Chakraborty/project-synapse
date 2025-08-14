@@ -54,7 +54,8 @@ def contact_recipient_via_chat(customer_id: str, message: str) -> str:
     responses = [
         "Response from recipient: 'I'm not home, please leave it with the concierge at the front desk.'",
         "Response from recipient: 'Oh no, I'm running 10 minutes late! Can the driver wait?'",
-        "Response from recipient: 'I did not order anything. Please cancel this delivery.'"
+        "Response from recipient: 'I did not order anything. Please cancel this delivery.'",
+        "Response from recipient: 'I'm not home right now. Can you just leave it somewhere safe?'"
     ]
     return random.choice(responses)
 
