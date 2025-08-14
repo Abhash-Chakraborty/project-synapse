@@ -57,3 +57,22 @@ def contact_recipient_via_chat(customer_id: str, message: str) -> str:
         "Response from recipient: 'I did not order anything. Please cancel this delivery.'"
     ]
     return random.choice(responses)
+
+@tool
+def reroute_driver(driver_id: str, new_task_description: str) -> str:
+    """
+    Reroutes a driver to a new task to optimize their time.
+    Use this when a driver would otherwise be idle, for example, waiting for a long food prep.
+    """
+    print(f"--- Calling Tool: reroute_driver for driver: {driver_id} ---")
+    print(f"New task: '{new_task_description}'")
+    return f"Driver {driver_id} has been successfully rerouted."
+
+@tool
+def get_nearby_merchants(cuisine_type: str) -> str:
+    """
+    Finds nearby merchants of a similar cuisine type that are operating normally.
+    """
+    print(f"--- Calling Tool: get_nearby_merchants for cuisine: {cuisine_type} ---")
+    # In a real scenario, this would query a database. Here, we simulate.
+    return f"Found nearby merchants: 'Pizza Pronto' and 'Italiano Fast' are operating normally."
