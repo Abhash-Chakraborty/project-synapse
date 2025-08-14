@@ -127,9 +127,16 @@ def analyze_evidence(evidence_string: str) -> str:
     Analyzes the collected evidence to determine the likely cause of the dispute.
     """
     print(f"--- Calling Tool: analyze_evidence ---")
-    if "'seal was intact'" in evidence_string.lower() and "'spilled_drink.jpg'" in evidence_string.lower():
+    # Convert to lower case for case-insensitive matching
+    evidence = evidence_string.lower()
+    
+    is_seal_intact = "'seal was intact'" in evidence or "'intact_bag_seal.jpg'" in evidence
+    is_spilled = "'spilled_drink.jpg'" in evidence
+    is_bag_torn = "'torn_bag.jpg'" in evidence
+
+    if is_seal_intact and is_spilled:
         return "Conclusion: Merchant packaging fault. The bag seal was intact, but the contents were damaged."
-    elif "'torn_bag.jpg'" in evidence_string.lower():
+    elif is_bag_torn:
         return "Conclusion: Driver mishandling fault. The packaging itself was damaged during transit."
     else:
         return "Conclusion: Inconclusive. Requires manual review."
