@@ -6,7 +6,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 
 # import tools 
-from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker
+from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback
 
 # load env variable (api key)
 load_dotenv()
@@ -21,7 +21,10 @@ if not os.getenv("GOOGLE_API_KEY"):
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0)
 
 # define list of tools
-tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker]
+tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, 
+         reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker,
+         initiate_mediation_flow, collect_evidence, analyze_evidence, 
+         issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback]
 
 # Create the Agent Prompt
 prompt = ChatPromptTemplate.from_messages([

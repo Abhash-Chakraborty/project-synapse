@@ -96,3 +96,64 @@ def find_nearby_locker(address: str) -> str:
     """
     print(f"--- Calling Tool: find_nearby_locker for address: {address} ---")
     return "Found nearby secure locker: 'ParcelHub Locker #78B' at the corner of Main St and 1st Ave."
+
+# --- Dispute Resolution Tools ---
+
+@tool
+def initiate_mediation_flow(customer_id: str, driver_id: str) -> str:
+    """
+    Initiates a real-time mediation flow between a customer and a driver for a dispute.
+    """
+    print(f"--- Calling Tool: initiate_mediation_flow between {customer_id} and {driver_id} ---")
+    return "Mediation flow initiated. Both parties are now in a synchronized resolution session."
+
+@tool
+def collect_evidence(customer_id: str, driver_id: str) -> str:
+    """
+    Guides the customer and driver to provide evidence, such as photos and answers to questions.
+    Simulates the collected evidence as a structured string.
+    """
+    print(f"--- Calling Tool: collect_evidence from {customer_id} and {driver_id} ---")
+    # Simulate different evidence outcomes
+    evidence_scenarios = [
+        "{'customer_photo': 'spilled_drink.jpg', 'driver_photo': 'intact_bag_seal.jpg', 'customer_statement': 'The seal was intact when I received it.', 'driver_statement': 'The bag was sealed by the merchant.'}",
+        "{'customer_photo': 'crushed_box.jpg', 'driver_photo': 'torn_bag.jpg', 'customer_statement': 'The bag was already torn.', 'driver_statement': 'The bag was flimsy and tore when I picked it up.'}"
+    ]
+    return f"Evidence collected: {random.choice(evidence_scenarios)}"
+
+@tool
+def analyze_evidence(evidence_string: str) -> str:
+    """
+    Analyzes the collected evidence to determine the likely cause of the dispute.
+    """
+    print(f"--- Calling Tool: analyze_evidence ---")
+    if "'seal was intact'" in evidence_string.lower() and "'spilled_drink.jpg'" in evidence_string.lower():
+        return "Conclusion: Merchant packaging fault. The bag seal was intact, but the contents were damaged."
+    elif "'torn_bag.jpg'" in evidence_string.lower():
+        return "Conclusion: Driver mishandling fault. The packaging itself was damaged during transit."
+    else:
+        return "Conclusion: Inconclusive. Requires manual review."
+
+@tool
+def issue_instant_refund(customer_id: str, reason: str) -> str:
+    """
+    Issues an instant refund to the customer.
+    """
+    print(f"--- Calling Tool: issue_instant_refund for {customer_id} ---")
+    return f"Instant refund processed for customer {customer_id}. Reason: {reason}"
+
+@tool
+def exonerate_driver(driver_id: str, reason: str) -> str:
+    """
+    Clears the driver of any fault in a dispute.
+    """
+    print(f"--- Calling Tool: exonerate_driver for {driver_id} ---")
+    return f"Driver {driver_id} has been exonerated. Reason: {reason}"
+
+@tool
+def log_merchant_packaging_feedback(merchant_name: str, feedback: str) -> str:
+    """
+    Logs feedback for a merchant regarding their packaging.
+    """
+    print(f"--- Calling Tool: log_merchant_packaging_feedback for {merchant_name} ---")
+    return f"Feedback logged for {merchant_name}: {feedback}"
