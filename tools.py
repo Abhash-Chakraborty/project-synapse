@@ -1,3 +1,4 @@
+# tools.py
 import random
 from langchain.tools import tool
 
@@ -8,13 +9,11 @@ def get_merchant_status(merchant_name: str) -> str:
     Returns a string describing the merchant's status.
     """
     print(f"--- Calling Tool: get_merchant_status with merchant: {merchant_name} ---")
-    # Simulate different merchant statuses
     statuses = {
         "overloaded": "The merchant is overloaded. Estimated prep time is 40 minutes.",
         "normal": "The merchant is operating normally. Estimated prep time is 15 minutes.",
         "closed": "The merchant is currently closed."
     }
-    # picking a status randomly for testing purposes
     chosen_status = random.choice(list(statuses.keys()))
     return statuses[chosen_status]
 
