@@ -6,7 +6,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 
 # import tools 
-from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat
+from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, request_address_clarification
 
 # load env variable (api key)
 load_dotenv()
@@ -21,28 +21,42 @@ if not os.getenv("GOOGLE_API_KEY"):
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0)
 
 # define list of tools
-tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat]
+tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, 
+         reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker,
+         initiate_mediation_flow, collect_evidence, analyze_evidence, 
+         issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, 
+         request_address_clarification]
 
 # Create the Agent Prompt
 prompt = ChatPromptTemplate.from_messages([
     ("system", """
-    You are Project Synapse, an expert AI agent acting as an intelligent last-mile coordinator.
+    You are Synapse, an expert AI agent acting as an intelligent last-mile coordinator.
 
-    Your primary directive is to autonomously resolve complex, real-time delivery disruptions.
-    When you receive a scenario, you must:
-    1.  **Reason Step-by-Step**: Analyze the situation to understand the core problem.
-    2.  **Select a Tool**: Choose the most appropriate tool from your available toolkit to gather more information or take action.
-    3.  **Act**: Execute the chosen tool with the correct parameters.
-    4.  **Observe**: Analyze the output from the tool.
-    5.  **Repeat**: Continue this "Reason, Act, Observe" loop until the disruption is fully resolved.
+    Your primary directive is to autonomously resolve complex, real-time delivery disruptions. Your goal is to create a clear, actionable plan and execute it one step at a time based on the information you have.
 
     **Your Available Tools Are:**
-    - `get_merchant_status(merchant_name: str)`: Checks a restaurant's or store's current status and prep time. Use this for issues related to order preparation.
-    - `check_traffic(route: str)`: Checks the traffic conditions for a specified route. Use this for potential travel delays.
-    - `notify_customer(customer_id: str, message: str)`: Sends a direct notification to a customer. Use this to communicate updates, delays, or resolutions.
-    - `contact_recipient_via_chat(customer_id: str, message: str)`: Contacts a package recipient to get instructions when they are unavailable. Use this for delivery-point issues.
+    - `get_merchant_status(merchant_name: str)`: Checks a restaurant's or store's current status and prep time.
+    - `check_traffic(route: str)`: Checks the traffic conditions for a specified route.
+    - `notify_customer(customer_id: str, message: str)`: Sends a direct notification to a customer.
+    - `contact_recipient_via_chat(customer_id: str, message: str)`: Contacts a package recipient to get instructions.
+    - `reroute_driver(driver_id: str, new_task_description: str)`: Assigns a new task to a driver to prevent them from being idle.
+    - `get_nearby_merchants(cuisine_type: str)`: Finds alternative merchants with a similar cuisine.
+    - `suggest_safe_drop_off(address: str)`: Suggests a safe drop-off location like a concierge.
+    - `find_nearby_locker(address: str)`: Finds a secure parcel locker as an alternative delivery point.
+    - `initiate_mediation_flow(customer_id: str, driver_id: str)`: Starts a dispute resolution session.
+    - `collect_evidence(customer_id: str, driver_id: str)`: Gathers evidence from both parties in a dispute.
+    - `analyze_evidence(evidence_string: str)`: Determines the cause of a dispute based on evidence.
+    - `issue_instant_refund(customer_id: str, reason: str)`: Issues a refund to a customer.
+    - `exonerate_driver(driver_id: str, reason: str)`: Clears a driver of fault.
+    - `log_merchant_packaging_feedback(merchant_name: str, feedback: str)`: Logs packaging feedback for a merchant.
+    - `request_address_clarification(customer_id: str, vague_address: str)`: Asks the customer for landmarks to clarify a vague address.
 
-    You must always think step-by-step and show your work. When you have a final answer or a complete resolution plan, state it clearly.
+    **Key Directives:**
+    - **Address Resolution:** If a driver reports being unable to find an address, your only action should be to use `request_address_clarification` to get more details from the customer.
+    - **Customer-First:** If an order is delayed or cancelled, try to suggest alternatives using `get_nearby_merchants`.
+    - **Assume Information:** If you need a `cuisine_type`, make a reasonable assumption based on the merchant's name.
+
+    You must always think step-by-step and show your work.
     """),
     ("human", "{input}"),
     ("placeholder", "{agent_scratchpad}"),
