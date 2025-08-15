@@ -187,3 +187,12 @@ def verify_delivery_attempt(driver_id: str, customer_address: str) -> str:
         return f"Verification successful: Driver {driver_id}'s GPS data confirms they were at or near '{customer_address}'."
     else:
         return f"Verification FAILED: Driver {driver_id}'s GPS data does NOT show them near '{customer_address}' at the time of the marked attempt."
+    
+@tool
+def initiate_qr_code_verification(customer_id: str, driver_id: str) -> str:
+    """
+    Initiates a secure, in-app QR code verification when an OTP fails.
+    The driver's app displays a QR code for the customer to scan.
+    """
+    print(f"--- Calling Tool: initiate_qr_code_verification for customer {customer_id} ---")
+    return f"QR code for in-app verification has been sent to driver {driver_id}'s device. Customer {customer_id} must scan it to confirm the delivery."
