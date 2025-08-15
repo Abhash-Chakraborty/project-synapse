@@ -164,3 +164,13 @@ def log_merchant_packaging_feedback(merchant_name: str, feedback: str) -> str:
     """
     print(f"--- Calling Tool: log_merchant_packaging_feedback for {merchant_name} ---")
     return f"Feedback logged for {merchant_name}: {feedback}"
+
+@tool
+def request_address_clarification(customer_id: str, vague_address: str) -> str:
+    """
+    Notifies a customer that the driver cannot find their address and requests clarification.
+    Simulates the customer's response with more details.
+    """
+    print(f"--- Calling Tool: request_address_clarification for customer {customer_id} ---")
+    # Simulate a customer providing a helpful landmark
+    return f"Customer {customer_id} has responded with clarification for '{vague_address}': 'Tell the driver to look for the big red gate near the old temple. It's the third house from there.'"
