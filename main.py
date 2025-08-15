@@ -1,9 +1,30 @@
 import os
 import argparse
+import colorama
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
+from logger import log_coordinator, log_final_answer
+from langchain.callbacks.base import BaseCallbackHandler
+
+colorama.init(autoreset=True)
+
+# Custom Callback Handler for streaming Agent's thoughts and actions
+class CustomCallbackHandler(BaseCallbackHandler):
+    def on_agent_action(self, action, **kwargs):
+        # This method is called when the agent is about to use a tool
+        from logger import log_tool_call
+        log_tool_call(action.tool, action.tool_input)
+
+    def on_tool_end(self, output, **kwargs):
+        # This method is called when a tool finishes running
+        from logger import log_tool_output
+        log_tool_output(output)
+
+    def on_agent_finish(self, finish, **kwargs):
+        # This method is called when the agent finishes its work
+        log_final_answer(finish.return_values['output'])
 
 # import tools 
 from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification
@@ -75,18 +96,17 @@ prompt = ChatPromptTemplate.from_messages([
 agent = create_tool_calling_agent(llm, tools, prompt)
 
 # create agent executor
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False, callbacks=[CustomCallbackHandler()])
 
 # main application logic
 def run_agent_coordinator(disruption_scenario: str):
-    print(f"\n[Coordinator] Received new disruption. Handing over to the agent...")
-    print(f"Scenario: '{disruption_scenario}'")
+    log_coordinator(f"Received new disruption. Handing over to the agent...")
+    log_coordinator(f"Scenario: '{disruption_scenario}'")
 
     # Invoke the agent executor with the scenario
-    result = agent_executor.invoke({"input": disruption_scenario})
+    agent_executor.invoke({"input": disruption_scenario})
 
-    print("\n[Coordinator] Agent has completed its task.")
-    print(f"[Final Answer]: {result['output']}")
+    log_coordinator("Agent has completed its task.")
 
 # command line parsing setup. 
 if __name__ == "__main__":
