@@ -1,7 +1,14 @@
-# tools.py
+# This file contains the suite of simulated digital tools that the Project Synapse
+# agent can use to interact with its environment. Each tool is a Python function
+# decorated with `@tool` from the LangChain library, which makes it discoverable
+# by the agent. The docstrings for each function are crucial, as they are used by
+# the LLM to understand what the tool does and when to use it.
+
 import random
 from langchain.tools import tool
 from logger import log_tool_call, log_tool_output
+
+# --- General Logistics & Monitoring Tools ---
 
 @tool
 def get_merchant_status(merchant_name: str) -> str:
@@ -31,6 +38,24 @@ def check_traffic(route: str) -> str:
     return random.choice(traffic_conditions)
 
 @tool
+def reroute_driver(driver_id: str, new_task_description: str) -> str:
+    """
+    Reroutes a driver to a new task to optimize their time.
+    Use this when a driver would otherwise be idle, for example, waiting for a long food prep.
+    """
+    return f"Driver {driver_id} has been successfully rerouted."
+
+@tool
+def get_nearby_merchants(cuisine_type: str) -> str:
+    """
+    Finds nearby merchants of a similar cuisine type that are operating normally.
+    """
+    # In a real scenario, this would query a database. Here, we simulate.
+    return f"Found nearby merchants: 'Pizza Pronto' and 'Italiano Fast' are operating normally."
+
+# --- Customer & Recipient Interaction Tools ---
+
+@tool
 def notify_customer(customer_id: str, message: str) -> str:
     """
     Sends a notification message to a specific customer.
@@ -53,22 +78,6 @@ def contact_recipient_via_chat(customer_id: str, message: str) -> str:
         "Response from recipient: 'I'm not home right now. Can you just leave it somewhere safe?'"
     ]
     return random.choice(responses)
-
-@tool
-def reroute_driver(driver_id: str, new_task_description: str) -> str:
-    """
-    Reroutes a driver to a new task to optimize their time.
-    Use this when a driver would otherwise be idle, for example, waiting for a long food prep.
-    """
-    return f"Driver {driver_id} has been successfully rerouted."
-
-@tool
-def get_nearby_merchants(cuisine_type: str) -> str:
-    """
-    Finds nearby merchants of a similar cuisine type that are operating normally.
-    """
-    # In a real scenario, this would query a database. Here, we simulate.
-    return f"Found nearby merchants: 'Pizza Pronto' and 'Italiano Fast' are operating normally."
 
 @tool
 def suggest_safe_drop_off(address: str) -> str:
@@ -148,6 +157,8 @@ def log_merchant_packaging_feedback(merchant_name: str, feedback: str) -> str:
     Logs feedback for a merchant regarding their packaging.
     """
     return f"Feedback logged for {merchant_name}: {feedback}"
+
+# --- Additional Refinement Tools ---
 
 @tool
 def request_address_clarification(customer_id: str, vague_address: str) -> str:

@@ -1,54 +1,64 @@
+# This script serves as the main entry point for the Project Synapse agent.
+# It handles environment setup, agent initialization, and the primary execution loop.
+# The core logic revolves around the LangChain AgentExecutor, which is powered by
+# a custom-engineered prompt and a suite of simulated digital tools.
+
 import os
 import argparse
 import colorama
 from dotenv import load_dotenv
+
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
-from logger import log_coordinator, log_final_answer
 from langchain.callbacks.base import BaseCallbackHandler
 
+# Internal utilities for structured logging and color-coded output.
+from logger import log_coordinator, log_final_answer
+
+# Import the complete suite of tools available to the agent.
+from tools import (
+    get_merchant_status, check_traffic, notify_customer, 
+    contact_recipient_via_chat, reroute_driver, get_nearby_merchants, 
+    suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow,
+    collect_evidence, analyze_evidence, issue_instant_refund,
+    exonerate_driver, log_merchant_packaging_feedback, 
+    request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification
+)
+
+# Initialize colorama to ensure cross-platform colored output in the terminal.
+# autoreset=True ensures that color styles are reset after each print statement.
 colorama.init(autoreset=True)
 
-# Custom Callback Handler for streaming Agent's thoughts and actions
-class CustomCallbackHandler(BaseCallbackHandler):
-    def on_agent_action(self, action, **kwargs):
-        # This method is called when the agent is about to use a tool
-        from logger import log_tool_call
-        log_tool_call(action.tool, action.tool_input)
+# --- ENVIRONMENT SETUP ---
 
-    def on_tool_end(self, output, **kwargs):
-        # This method is called when a tool finishes running
-        from logger import log_tool_output
-        log_tool_output(output)
-
-    def on_agent_finish(self, finish, **kwargs):
-        # This method is called when the agent finishes its work
-        log_final_answer(finish.return_values['output'])
-
-# import tools 
-from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification
-
-# load env variable (api key)
+# Load environment variables (specifically the API key) from a .env file.
 load_dotenv()
 
-# check if api key present
+# Security check: Ensure the Google API key is present before proceeding.
 if not os.getenv("GOOGLE_API_KEY"):
     print("ERROR: GOOGLE_API_KEY not found in .env file.")
     exit()
 
-# initialise the gemini LLM
-# setting temperature=0 (deterministic) for initial testing
+# --- AGENT INITIALIZATION ---
+
+# Initialize the core language model.
+# Using a powerful model like gemini-1.5-pro is key for complex reasoning.
+# Temperature is set to 0 for deterministic and predictable behavior during testing.
 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0)
 
-# define list of tools
+# Define the complete list of tools the agent is authorized to use.
+# The agent's capabilities are entirely determined by this list.
 tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, 
          reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker,
          initiate_mediation_flow, collect_evidence, analyze_evidence, 
          issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, 
          request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification]
 
-# Create the Agent Prompt
+# --- PROMPT ENGINEERING ---
+
+# This system prompt defines the agent's persona, capabilities,
+# and the logical rules it must follow.
 prompt = ChatPromptTemplate.from_messages([
     ("system", """
     You are Synapse, an expert AI agent acting as an intelligent last-mile coordinator.
@@ -92,14 +102,41 @@ prompt = ChatPromptTemplate.from_messages([
     ("placeholder", "{agent_scratchpad}"),
 ])
 
-# creating agent
+# --- AGENT AND EXECUTOR SETUP ---
+
+# A custom callback handler to intercept and format the agent's output.
+# This class ensures a more readable CLI Output. 
+class CustomCallbackHandler(BaseCallbackHandler):
+    def on_agent_action(self, action, **kwargs):
+        # This method is called when the agent is about to use a tool
+        from logger import log_tool_call
+        log_tool_call(action.tool, action.tool_input)
+
+    def on_tool_end(self, output, **kwargs):
+        # This method is called when a tool finishes running
+        from logger import log_tool_output
+        log_tool_output(output)
+
+    def on_agent_finish(self, finish, **kwargs):
+        # This method is called when the agent finishes its work
+        log_final_answer(finish.return_values['output'])
+
+# Create the agent with the standard 'create_tool_calling_agent' LangChain constructor.
 agent = create_tool_calling_agent(llm, tools, prompt)
 
-# create agent executor
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False, callbacks=[CustomCallbackHandler()])
+# Create the Agent Executor, which is the runtime environment for the agent.
+# It's responsible for calling tools and feeding the results back to the agent.
+# `verbose=False` is set to disable LangChain's default (messy) logging.
+# `callbacks` are used to hook into the agent's lifecycle for custom logging.
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False,
+                                callbacks=[CustomCallbackHandler()])
 
-# main application logic
+# --- MAIN APPLICATION LOGIC ---
+
 def run_agent_coordinator(disruption_scenario: str):
+    """
+    Main function to run the agent with a given scenario.
+    """
     log_coordinator(f"Received new disruption. Handing over to the agent...")
     log_coordinator(f"Scenario: '{disruption_scenario}'")
 
@@ -108,15 +145,21 @@ def run_agent_coordinator(disruption_scenario: str):
 
     log_coordinator("Agent has completed its task.")
 
-# command line parsing setup. 
+# --- COMMAND-LINE INTERFACE ---
+
+# Standard Python entry point.
 if __name__ == "__main__":
+    # `argparse` is used to create a user-friendly CLI.
     parser = argparse.ArgumentParser(
         description="Project Synapse: Agentic Last-Mile Coordinator"
     )
+    # The application requires a single positional argument: the scenario text.
     parser.add_argument(
         "scenario",
         type=str,
         help="A string describing the last-mile delivery disruption.",
     )
     args = parser.parse_args()
+
+    # Run the main coordinator function with the user-provided scenario.
     run_agent_coordinator(args.scenario)
