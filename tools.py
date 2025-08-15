@@ -174,3 +174,25 @@ def request_address_clarification(customer_id: str, vague_address: str) -> str:
     print(f"--- Calling Tool: request_address_clarification for customer {customer_id} ---")
     # Simulate a customer providing a helpful landmark
     return f"Customer {customer_id} has responded with clarification for '{vague_address}': 'Tell the driver to look for the big red gate near the old temple. It's the third house from there.'"
+
+@tool
+def verify_delivery_attempt(driver_id: str, customer_address: str) -> str:
+    """
+    Verifies if a driver was physically at a customer's address by checking GPS data.
+    Use this when a customer disputes a 'failed delivery' notification.
+    """
+    print(f"--- Calling Tool: verify_delivery_attempt for driver {driver_id} ---")
+    # Simulate that the driver sometimes fakes the attempt
+    if random.choice([True, True, False]): # 2 in 3 chance of being a real attempt
+        return f"Verification successful: Driver {driver_id}'s GPS data confirms they were at or near '{customer_address}'."
+    else:
+        return f"Verification FAILED: Driver {driver_id}'s GPS data does NOT show them near '{customer_address}' at the time of the marked attempt."
+    
+@tool
+def initiate_qr_code_verification(customer_id: str, driver_id: str) -> str:
+    """
+    Initiates a secure, in-app QR code verification when an OTP fails.
+    The driver's app displays a QR code for the customer to scan.
+    """
+    print(f"--- Calling Tool: initiate_qr_code_verification for customer {customer_id} ---")
+    return f"QR code for in-app verification has been sent to driver {driver_id}'s device. Customer {customer_id} must scan it to confirm the delivery."

@@ -6,7 +6,7 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 
 # import tools 
-from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, request_address_clarification
+from tools import get_merchant_status, check_traffic, notify_customer, contact_recipient_via_chat, reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker, initiate_mediation_flow, collect_evidence, analyze_evidence, issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification
 
 # load env variable (api key)
 load_dotenv()
@@ -25,7 +25,7 @@ tools = [get_merchant_status, check_traffic, notify_customer, contact_recipient_
          reroute_driver, get_nearby_merchants, suggest_safe_drop_off, find_nearby_locker,
          initiate_mediation_flow, collect_evidence, analyze_evidence, 
          issue_instant_refund, exonerate_driver, log_merchant_packaging_feedback, 
-         request_address_clarification]
+         request_address_clarification, verify_delivery_attempt, initiate_qr_code_verification]
 
 # Create the Agent Prompt
 prompt = ChatPromptTemplate.from_messages([
@@ -50,11 +50,20 @@ prompt = ChatPromptTemplate.from_messages([
     - `exonerate_driver(driver_id: str, reason: str)`: Clears a driver of fault.
     - `log_merchant_packaging_feedback(merchant_name: str, feedback: str)`: Logs packaging feedback for a merchant.
     - `request_address_clarification(customer_id: str, vague_address: str)`: Asks the customer for landmarks to clarify a vague address.
-
+    - `verify_delivery_attempt(driver_id: str, customer_address: str)`: Checks a driver's GPS data to confirm if a delivery attempt was legitimate.
+    - `initiate_qr_code_verification(customer_id: str, driver_id: str)`: Provides a secure QR code for the customer to scan when an OTP fails.
+     
     **Key Directives:**
-    - **Address Resolution:** If a driver reports being unable to find an address, your only action should be to use `request_address_clarification` to get more details from the customer.
+    - **Dispute Types:** You must first determine the type of dispute.
+        - If the dispute involves **damaged, spilled, or broken items**, you MUST use the mediation workflow starting with `initiate_mediation_flow` or `collect_evidence`.
+        - If the dispute is a **"failed delivery"** where the customer claims the driver never arrived, you MUST use the verification workflow starting with `verify_delivery_attempt`.
+    - **Verification Workflow:**
+        - If `verify_delivery_attempt` is **successful** (the driver was there), your next step is to `notify_customer` that the attempt was valid and ask if they would like to reschedule.
+        - If `verify_delivery_attempt` **fails** (the driver was not there), your next step is to `notify_customer`, apologize for the error, and immediately reschedule the delivery.
+    - **Address Resolution:** If a driver reports being unable to find an address, your only action should be to use `request_address_clarification`.
     - **Customer-First:** If an order is delayed or cancelled, try to suggest alternatives using `get_nearby_merchants`.
     - **Assume Information:** If you need a `cuisine_type`, make a reasonable assumption based on the merchant's name.
+    - **OTP Failures:** If a customer or driver reports that the delivery confirmation OTP has not been received, your first and only action should be to use `initiate_qr_code_verification`.
 
     You must always think step-by-step and show your work.
     """),
