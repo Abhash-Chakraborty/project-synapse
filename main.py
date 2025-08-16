@@ -4,7 +4,6 @@
 # a custom-engineered prompt and a suite of simulated digital tools.
 
 import os
-import argparse
 import colorama
 from dotenv import load_dotenv
 
@@ -14,7 +13,7 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain.callbacks.base import BaseCallbackHandler
 
 # Internal utilities for structured logging and color-coded output.
-from logger import log_coordinator, log_final_answer
+from logger import log_coordinator, log_final_answer, bcolors
 
 # Import the complete suite of tools available to the agent.
 from tools import (
@@ -117,10 +116,6 @@ class CustomCallbackHandler(BaseCallbackHandler):
         from logger import log_tool_output
         log_tool_output(output)
 
-    def on_agent_finish(self, finish, **kwargs):
-        # This method is called when the agent finishes its work
-        log_final_answer(finish.return_values['output'])
-
 # Create the agent with the standard 'create_tool_calling_agent' LangChain constructor.
 agent = create_tool_calling_agent(llm, tools, prompt)
 
@@ -131,35 +126,40 @@ agent = create_tool_calling_agent(llm, tools, prompt)
 agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=False,
                                 callbacks=[CustomCallbackHandler()])
 
-# --- MAIN APPLICATION LOGIC ---
+# --- MAIN CHATBOT LOGIC ---
 
-def run_agent_coordinator(disruption_scenario: str):
+def main_loop():
     """
-    Main function to run the agent with a given scenario.
+    Main interactive loop for the chatbot.
     """
-    log_coordinator(f"Received new disruption. Handing over to the agent...")
-    log_coordinator(f"Scenario: '{disruption_scenario}'")
+    print(f"{bcolors.HEADER}{bcolors.BOLD}Welcome to the Project Synapse Interactive CLI.")
+    print(f"{bcolors.HEADER}You can describe a delivery disruption, and the agent will try to resolve it.")
+    print(f"{bcolors.HEADER}Type 'exit' or 'quit' to end the session.\n")
 
-    # Invoke the agent executor with the scenario
-    agent_executor.invoke({"input": disruption_scenario})
+    while True:
+        # Get user input from the console.
+        user_input = input(f"{bcolors.BOLD}Enter a disruption scenario: {bcolors.ENDC}")
 
-    log_coordinator("Agent has completed its task.")
+        # Check for exit commands.
+        if user_input.lower() in ["exit", "quit"]:
+            print(f"{bcolors.WARNING}Ending session. Goodbye!")
+            break
 
-# --- COMMAND-LINE INTERFACE ---
+        # Handle empty input.
+        if not user_input.strip():
+            continue
 
-# Standard Python entry point.
+        # Hand the scenario over to the agent.
+        log_coordinator("Received new disruption. Handing over to the agent...")
+
+        try:
+            result = agent_executor.invoke({"input": user_input})
+            log_final_answer(result['output'])
+        except Exception as e:
+            log_coordinator(f"An error occurred during agent execution: {e}")
+
+        log_coordinator("Agent has completed its task and is ready for the next scenario.\n")
+
+# --- APPLICATION ENTRY POINT ---
 if __name__ == "__main__":
-    # `argparse` is used to create a user-friendly CLI.
-    parser = argparse.ArgumentParser(
-        description="Project Synapse: Agentic Last-Mile Coordinator"
-    )
-    # The application requires a single positional argument: the scenario text.
-    parser.add_argument(
-        "scenario",
-        type=str,
-        help="A string describing the last-mile delivery disruption.",
-    )
-    args = parser.parse_args()
-
-    # Run the main coordinator function with the user-provided scenario.
-    run_agent_coordinator(args.scenario)
+    main_loop()
