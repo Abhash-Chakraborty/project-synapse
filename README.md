@@ -85,11 +85,9 @@ GOOGLE_API_KEY="your_api_key_here"
 
 ### 3. How to Run
 
-The application is run from the command line, with the disruption scenario passed as a string argument.
+The application can be run from the command line by running the main.py file
 
-**Example Command:**
 ```bash
-python main.py "A dispute has started at the door between customer C123 and driver D456 over a spilled drink from 'The Gourmet Kitchen'. Please mediate and resolve."
+python main.py 
 ```
-
 The agent's detailed, color-coded thought process and final resolution will be printed to the console.
