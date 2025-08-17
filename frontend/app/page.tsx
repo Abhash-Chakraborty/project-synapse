@@ -4,7 +4,6 @@ import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button"
 import { Badge } from "../components/ui/badge"
-import { Textarea } from "../components/ui/textarea"
 import { DashboardStats } from "../components/dashboard-stats"
 import { ActivityMonitor } from "../components/activity-monitor"
 import { ToolUsageChart } from "../components/tool-usage-chart"
@@ -12,7 +11,7 @@ import { AgentInterface } from "../components/agent-interface"
 import { BarChart3, Activity, Settings, RefreshCw, Zap, Bot } from "lucide-react"
 
 export default function HomePage() {
-  const [view, setView] = useState<'dashboard' | 'agent'>('dashboard')
+  const [view, setView] = useState<'dashboard' | 'agent'>('agent')
 
   return (
     <div className="min-h-screen bg-background">
@@ -142,79 +141,80 @@ function DashboardView() {
         activeAgents={3}
         toolsExecuted={183}
       />
-
+      
       {/* Activity and Tool Usage */}
       <div className="grid gap-4 lg:gap-6 xl:grid-cols-2">
         <ActivityMonitor activities={activities} />
         <ToolUsageChart toolUsage={toolUsage} />
       </div>
 
-      {/* System Overview */}
-      <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg">System Health</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Overall system performance</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">API Response Time</span>
-              <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 text-xs">
-                1.2s
-              </Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">Uptime</span>
-              <span className="text-xs sm:text-sm font-medium">99.9%</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">Error Rate</span>
-              <span className="text-xs sm:text-sm font-medium">0.1%</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base sm:text-lg">Today's Summary</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Key metrics for today</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">Cases Handled</span>
-              <span className="text-xs sm:text-sm font-medium">23</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">Tools Executed</span>
-              <span className="text-xs sm:text-sm font-medium">67</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm">Evidence Collected</span>
-              <span className="text-xs sm:text-sm font-medium">12</span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Quick Actions</CardTitle>
-            <CardDescription>System management</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Button variant="outline" size="sm" className="w-full justify-start bg-transparent" onClick={handleRefresh}>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh Data
-            </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-              <Settings className="h-4 w-4 mr-2" />
-              System Configuration
-            </Button>
-            <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
-              <Activity className="h-4 w-4 mr-2" />
-              Export Activity Log
-            </Button>
-          </CardContent>
-        </Card>
+      {/* Available Tools and System Overview */}
+      <div className="grid gap-4 lg:gap-6 lg:grid-cols-3">
+        
+        
+        {/* System Overview - takes 1 column */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg">System Health</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Overall system performance</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">API Response Time</span>
+                <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 text-xs">
+                  1.2s
+                </Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">Uptime</span>
+                <span className="text-xs sm:text-sm font-medium">99.9%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">Error Rate</span>
+                <span className="text-xs sm:text-sm font-medium">0.1%</span>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg">Today's Summary</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Key metrics for today</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">Cases Handled</span>
+                <span className="text-xs sm:text-sm font-medium">23</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">Tools Executed</span>
+                <span className="text-xs sm:text-sm font-medium">67</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs sm:text-sm">Evidence Collected</span>
+                <span className="text-xs sm:text-sm font-medium">12</span>
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base sm:text-lg">Quick Actions</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">System management</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Button variant="outline" size="sm" className="w-full justify-start bg-transparent" onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh Data
+              </Button>
+              <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                <Settings className="h-4 w-4 mr-2" />
+                System Configuration
+              </Button>
+              <Button variant="outline" size="sm" className="w-full justify-start bg-transparent">
+                <Activity className="h-4 w-4 mr-2" />
+                Export Activity Log
+              </Button>
+            </CardContent>
+          </Card>
       </div>
 
       {/* Last Updated */}

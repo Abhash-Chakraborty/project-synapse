@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { TrendingUp, TrendingDown, Package, Clock, CheckCircle, Users, Zap } from "lucide-react"
+import { AvailableTools } from "../components/available-tools"
 
 interface DashboardStatsProps {
   totalCases: number
@@ -84,7 +85,10 @@ export function DashboardStats({
           </Card>
         ))}
       </div>
-
+      {/* Available Tools - takes 2 columns on large screens */}
+      <div className="lg:col-span-2">
+        <AvailableTools />
+      </div>
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
