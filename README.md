@@ -6,15 +6,6 @@ Project Synapse is a sophisticated autonomous AI agent designed to intelligently
 
 ## 🚀 Quick Start
 
-### Automated Start (Recommended)
-```bash
-# Windows
-start.bat
-
-# Linux/Mac
-./start.sh
-```
-
 ### Manual Start
 ```bash
 # 1. Start MCP Server
@@ -65,16 +56,35 @@ python -m src.main
 The Next.js frontend provides a comprehensive interface for monitoring and interacting with the AI agent:
 
 ### Dashboard View
+The project features a comprehensive dashboard that provides a real-time overview of the system's performance and key metrics.
+
+![Project Synapse Dashboard](frontend/screenshots/dashboard.jpg)
+
 - **📊 Performance Metrics**: Real-time KPIs and success rates
 - **📈 Tool Usage Analytics**: Visualization of most-used tools
 - **🔄 Activity Monitor**: Live feed of system events
 - **⚡ System Health**: Server status and performance indicators
 
-### Agent Interface  
+### Agent Interface 
+The core of Project Synapse is the AI Agent Interface, where you can describe a delivery disruption scenario and watch the AI agent work through it.
+
+![AI Agent Interface](frontend/screenshots/agent-interface.jpg)
+ 
 - **🤖 Interactive Testing**: Submit custom delivery scenarios
 - **📝 Reasoning Display**: See the agent's thought process
 - **🔧 Tool Execution**: Watch tools being used in real-time
 - **📋 Pre-built Scenarios**: Test common disruption cases
+
+### Execution History and Agent Reasoning
+
+The system keeps a detailed log of each case, including the AI's reasoning and the specific actions it took to resolve the issue. This helps in understanding and auditing the agent's behavior.
+
+![Execution History](frontend/screenshots/execution-history.jpg)
+
+In the example above, a customer's delivery was marked as 'failed'. The AI agent's plan was to:
+
+-  **Verify the delivery attempt:** Check the driver's location and other data to confirm what happened.
+-  **Notify the customer:** Proactively reach out to the customer to reschedule the delivery, providing a clear and helpful message.
 
 ### Sample Scenarios Available
 - Restaurant overload with long prep times
