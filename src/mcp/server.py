@@ -109,6 +109,38 @@ async def notify_customer(customer_id: str, message: str):
     from ..tools.customer import notify_customer as nc
     return nc.invoke({"customer_id": customer_id, "message": message})
 
+@app.post("/agent/execute")
+async def execute_agent_scenario(request: dict):
+    """Execute an agent scenario and return the reasoning and tool executions."""
+    try:
+        scenario = request.get("scenario")
+        context = request.get("context", {})
+        
+        if not scenario:
+            raise HTTPException(status_code=400, detail="Scenario is required")
+        
+        # Import the agent
+        from ..core.agent import SynapseAgent
+        
+        # Create agent instance
+        agent = SynapseAgent()
+        
+        # Execute the scenario
+        result = await agent.process_scenario(scenario, context)
+        
+        return {
+            "scenario": scenario,
+            "agent_reasoning": result.get("reasoning", ""),
+            "planned_actions": result.get("actions", []),
+            "execution_results": result.get("execution_results", []),
+            "timestamp": context.get("timestamp"),
+            "success": result.get("success", False)
+        }
+        
+    except Exception as e:
+        log_error(f"Agent execution error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Agent execution failed: {str(e)}")
+
 def run_mcp_server():
     """Run the MCP server."""
     log_info(f"Starting MCP server: {Config.MCP_SERVER_NAME}")

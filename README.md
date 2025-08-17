@@ -1,32 +1,46 @@
-# Project Synapse: Refactored Agentic Last-Mile Coordinator
+# Project Synapse: Agentic Last-Mile Coordinator
 
-> **🎉 REFACTORED VERSION**: This project has been completely refactored for better modularity, MCP integration, and Next.js frontend preparation!
+> **🎉 COMPLETE SOLUTION**: Full-stack AI delivery coordination system with Next.js frontend and MCP integration!
 
-Project Synapse is a sophisticated autonomous AI agent designed to intelligently resolve real-time, last-mile delivery disruptions. This refactored version introduces clean architecture, Model Context Protocol (MCP) support, and enhanced developer experience.
+Project Synapse is a sophisticated autonomous AI agent designed to intelligently resolve real-time, last-mile delivery disruptions. This version includes a beautiful Next.js frontend, Model Context Protocol (MCP) integration, and comprehensive tooling for delivery coordination.
 
 ## 🚀 Quick Start
 
+### Automated Start (Recommended)
 ```bash
-# Setup (one-time)
-python scripts/setup.py
-cp .env.example .env
-# Add your GOOGLE_API_KEY to .env
+# Windows
+start.bat
 
-# Run CLI
-python scripts/start.py cli
-
-# Run with MCP server
-python scripts/start.py dev
+# Linux/Mac
+./start.sh
 ```
 
-## ✨ New Features
+### Manual Start
+```bash
+# 1. Start MCP Server
+python -m src.mcp.server
 
+# 2. Start Frontend (new terminal)
+cd frontend
+npm install
+npm run dev
+```
+
+### CLI Only
+```bash
+python -m src.main
+```
+
+## ✨ Features
+
+- **🎨 Beautiful Frontend**: Modern Next.js dashboard with real-time monitoring
+- **🤖 Interactive Agent**: Test AI scenarios through web interface
 - **🏗️ Modular Architecture**: Clean separation into focused modules
 - **🔧 MCP Integration**: FastAPI-based Model Context Protocol server
-- **⚡ Enhanced Performance**: Optimized async operations
-- **🧪 Comprehensive Testing**: Automated validation and demos
-- **📱 Frontend Ready**: Next.js structure prepared
-- **🔍 Better Debugging**: Enhanced logging and error handling
+- **📊 Analytics Dashboard**: Tool usage, performance metrics, and activity monitoring
+- **⚡ Real-time Updates**: Live activity feed and system status
+- **🧪 Comprehensive Testing**: Built-in scenario testing and validation
+- **� Advanced Debugging**: Enhanced logging and error handling
 
 ## 📁 Project Structure
 
@@ -39,9 +53,36 @@ python scripts/start.py dev
 │   └── main.py       # CLI application
 ├── docs/             # Documentation
 ├── scripts/          # Utility scripts and tools
-├── frontend/         # Next.js frontend (coming soon)
+├── frontend/         # Next.js frontend with dashboard
+│   ├── app/          # Next.js app directory
+│   ├── components/   # React components
+│   └── lib/          # Utilities
 └── legacy/           # Original files (preserved)
 ```
+
+## 🎨 Frontend Features
+
+The Next.js frontend provides a comprehensive interface for monitoring and interacting with the AI agent:
+
+### Dashboard View
+- **📊 Performance Metrics**: Real-time KPIs and success rates
+- **📈 Tool Usage Analytics**: Visualization of most-used tools
+- **🔄 Activity Monitor**: Live feed of system events
+- **⚡ System Health**: Server status and performance indicators
+
+### Agent Interface  
+- **🤖 Interactive Testing**: Submit custom delivery scenarios
+- **📝 Reasoning Display**: See the agent's thought process
+- **🔧 Tool Execution**: Watch tools being used in real-time
+- **📋 Pre-built Scenarios**: Test common disruption cases
+
+### Sample Scenarios Available
+- Restaurant overload with long prep times
+- Damaged packaging disputes at delivery
+- Recipient unavailability for valuable packages
+- Traffic obstructions blocking delivery routes
+
+Access the frontend at: **http://localhost:3000**
 
 ## 🛠️ Available Tools (17 Total)
 
