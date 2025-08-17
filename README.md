@@ -16,7 +16,8 @@ Project Synapse is a sophisticated autonomous AI agent designed to intelligently
 ## 🌐 Live Demo
 
 - **🤖 MCP Server**: [Deployed on Hugging Face Spaces](https://abhash-chakraborty-synapse.hf.space)
-- **🎨 Frontend**: [Deployed on Vercel](https://project-synapse-frontend.vercel.app)
+- **🎨 Frontend**: [Deployed on Vercel](https://project-synapse-nu.vercel.app)
+  
 
 ## 🚀 Deployment
 
@@ -160,30 +161,30 @@ Access the frontend at: **http://localhost:3000**
 
 ## 🛠️ Available Tools (17 Total)
 
-### 🚛 Logistics Tools
-- `get_merchant_status` - Check restaurant operational status
-- `check_traffic` - Analyze route conditions
-- `reroute_driver` - Optimize driver assignments
-- `get_nearby_merchants` - Find alternative vendors
+### 🚛 Logistics Tools (4)
+- **`get_merchant_status`** - Check restaurant operational status and preparation times
+- **`check_traffic`** - Analyze route conditions and traffic patterns for optimal routing
+- **`reroute_driver`** - Optimize driver assignments and routes for maximum efficiency
+- **`get_nearby_merchants`** - Find alternative vendors of similar cuisine when primary merchant is unavailable
 
-### 👥 Customer Tools  
-- `notify_customer` - Send notifications
-- `contact_recipient_via_chat` - Real-time communication
-- `suggest_safe_drop_off` - Secure delivery locations
-- `find_nearby_locker` - Parcel locker options
-- `request_address_clarification` - Resolve ambiguous addresses
+### 👥 Customer Tools (5)
+- **`notify_customer`** - Send notifications and real-time updates to customers
+- **`contact_recipient_via_chat`** - Initiate real-time chat communication with delivery recipients
+- **`suggest_safe_drop_off`** - Recommend secure delivery locations when recipient is unavailable
+- **`find_nearby_locker`** - Locate parcel lockers near delivery address for secure package storage
+- **`request_address_clarification`** - Request clearer address details from customers when location is ambiguous
 
-### ⚖️ Dispute Tools
-- `initiate_mediation_flow` - Start dispute resolution
-- `collect_evidence` - Gather photos and statements
-- `analyze_evidence` - Determine fault
-- `issue_instant_refund` - Process refunds
-- `exonerate_driver` - Clear driver of fault
-- `log_merchant_packaging_feedback` - Record issues
+### ⚖️ Dispute Tools (6)
+- **`initiate_mediation_flow`** - Start real-time dispute resolution between customers and drivers
+- **`collect_evidence`** - Gather photos, statements, and documentation for dispute cases
+- **`analyze_evidence`** - Determine fault and recommend resolution based on collected evidence
+- **`issue_instant_refund`** - Process immediate refunds for customers in justified cases
+- **`exonerate_driver`** - Clear driver of fault in dispute cases with supporting evidence
+- **`log_merchant_packaging_feedback`** - Record packaging quality feedback and issues for merchants
 
-### 🔐 Verification Tools
-- `verify_delivery_attempt` - GPS validation
-- `initiate_qr_code_verification` - OTP alternatives
+### 🔐 Verification Tools (2)
+- **`verify_delivery_attempt`** - Validate delivery attempts using GPS data and location verification
+- **`initiate_qr_code_verification`** - Generate secure QR codes for contactless delivery confirmation
 
 ## 🌐 MCP Server
 
