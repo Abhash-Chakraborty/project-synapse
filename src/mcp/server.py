@@ -42,6 +42,16 @@ async def root():
         "tools": len(ALL_TOOLS)
     }
 
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for monitoring."""
+    return {
+        "status": "healthy",
+        "server": Config.MCP_SERVER_NAME,
+        "version": Config.MCP_SERVER_VERSION,
+        "tools_available": len(ALL_TOOLS)
+    }
+
 @app.get("/tools")
 async def list_tools():
     """List all available tools."""

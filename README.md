@@ -1,8 +1,72 @@
+---
+title: Synapse
+emoji: 🚀
+colorFrom: green
+colorTo: pink
+sdk: docker
+pinned: false
+---
+
 # Project Synapse: Agentic Last-Mile Coordinator
 
 > **🎉 COMPLETE SOLUTION**: Full-stack AI delivery coordination system with Next.js frontend and MCP integration!
 
 Project Synapse is a sophisticated autonomous AI agent designed to intelligently resolve real-time, last-mile delivery disruptions. This version includes a beautiful Next.js frontend, Model Context Protocol (MCP) integration, and comprehensive tooling for delivery coordination.
+
+## 🌐 Live Demo
+
+- **🤖 MCP Server**: [Deployed on Hugging Face Spaces](https://abhash-chakraborty-synapse.hf.space)
+- **🎨 Frontend**: [Deployed on Vercel](https://project-synapse-frontend.vercel.app)
+
+## 🚀 Deployment
+
+### Deploy MCP Server to Hugging Face Spaces
+
+1. **Create a new Space on Hugging Face**:
+   - Go to [Hugging Face Spaces](https://huggingface.co/spaces)
+   - Click "Create new Space"
+   - Choose "Docker" as the Space SDK
+   - Set visibility to "Public"
+
+2. **Clone and push your repository**:
+   ```bash
+   git clone https://github.com/your-username/project-synapse.git
+   cd project-synapse
+   git remote add hf https://huggingface.co/spaces/your-username/project-synapse-mcp
+   git push hf main
+   ```
+
+3. **Configure environment variables** in your Space settings:
+   - `GOOGLE_API_KEY`: Your Google Generative AI API key
+   - `PORT`: 7860 (default for HF Spaces)
+
+### Deploy Frontend to Vercel
+
+1. **Install Vercel CLI** (optional):
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy with Vercel**:
+   ```bash
+   cd frontend
+   vercel
+   ```
+
+3. **Or connect your GitHub repository** to Vercel for automatic deployments:
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Import Project"
+   - Connect your GitHub repository
+   - Set build settings:
+     - Framework: Next.js
+     - Root Directory: `frontend`
+     - Build Command: `npm run build`
+     - Output Directory: `.next`
+
+### Environment Variables for Frontend
+
+Set these in your Vercel project settings:
+- `NEXT_PUBLIC_MCP_SERVER_URL`: URL of your deployed MCP server
 
 ## 🚀 Quick Start
 

@@ -204,16 +204,16 @@ export function AgentInterface() {
           
           <div className="space-y-2">
             <p className="text-sm font-medium">Sample Scenarios:</p>
-            <div className="grid gap-2 md:grid-cols-2">
+            <div className="grid gap-2 sm:grid-cols-2">
               {sampleScenarios.map((sample, index) => (
                 <Button
                   key={index}
                   variant="outline"
                   size="sm"
-                  className="h-auto p-3 text-left justify-start text-wrap"
+                  className="h-auto p-2 sm:p-3 text-left justify-start text-wrap"
                   onClick={() => loadSampleScenario(sample)}
                 >
-                  <div className="text-xs">{sample}</div>
+                  <div className="text-xs leading-relaxed">{sample}</div>
                 </Button>
               ))}
             </div>

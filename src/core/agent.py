@@ -86,38 +86,66 @@ class SynapseAgent:
         try:
             # Capture tool executions and reasoning
             tool_executions = []
-            reasoning = ""
+            current_tool_index = -1
             
             # Create a custom callback handler to capture tool usage
             class CaptureCallbackHandler(BaseCallbackHandler):
                 def on_agent_action(self, action, **kwargs):
+                    nonlocal current_tool_index
+                    current_tool_index += 1
                     tool_executions.append({
                         "tool": action.tool,
                         "params": action.tool_input,
-                        "reasoning": f"Using {action.tool} to resolve the scenario"
+                        "reasoning": f"Using {action.tool} to resolve the scenario",
+                        "result": None,
+                        "status": "pending"
                     })
                 
                 def on_tool_end(self, output, **kwargs):
-                    if tool_executions:
-                        tool_executions[-1]["result"] = output
-                        tool_executions[-1]["status"] = "success"
+                    nonlocal current_tool_index
+                    if current_tool_index >= 0 and current_tool_index < len(tool_executions):
+                        tool_executions[current_tool_index]["result"] = output
+                        tool_executions[current_tool_index]["status"] = "success"
                 
                 def on_tool_error(self, error, **kwargs):
-                    if tool_executions:
-                        tool_executions[-1]["result"] = None
-                        tool_executions[-1]["status"] = "error"
-                        tool_executions[-1]["error"] = str(error)
+                    nonlocal current_tool_index
+                    if current_tool_index >= 0 and current_tool_index < len(tool_executions):
+                        tool_executions[current_tool_index]["result"] = f"Error: {str(error)}"
+                        tool_executions[current_tool_index]["status"] = "error"
+                        tool_executions[current_tool_index]["error"] = str(error)
             
             # Create temporary executor with custom callback
             temp_executor = AgentExecutor(
                 agent=self.agent,
                 tools=ALL_TOOLS,
-                verbose=False,
+                verbose=True,  # Enable verbose to help with debugging
                 callbacks=[CaptureCallbackHandler()]
             )
             
             # Execute the scenario
             result = temp_executor.invoke({"input": scenario})
+            
+            # Post-process to ensure all tools have results
+            for i, execution in enumerate(tool_executions):
+                if execution["result"] is None and execution["status"] == "pending":
+                    # Try to execute the tool manually to get a result
+                    try:
+                        tool_found = None
+                        for tool in ALL_TOOLS:
+                            if tool.name == execution["tool"]:
+                                tool_found = tool
+                                break
+                        
+                        if tool_found:
+                            manual_result = tool_found.invoke(execution["params"])
+                            tool_executions[i]["result"] = manual_result
+                            tool_executions[i]["status"] = "success_manual"
+                        else:
+                            tool_executions[i]["result"] = "Tool not found"
+                            tool_executions[i]["status"] = "error"
+                    except Exception as e:
+                        tool_executions[i]["result"] = f"Manual execution failed: {str(e)}"
+                        tool_executions[i]["status"] = "error"
             
             return {
                 "reasoning": result.get('output', 'Agent processed the scenario successfully'),
