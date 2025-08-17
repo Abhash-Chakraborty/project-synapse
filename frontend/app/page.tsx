@@ -17,45 +17,58 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
-                <Zap className="h-6 w-6 text-primary-foreground" />
+      <header className="border-b bg-card sticky top-0 z-50">
+        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4">
+          <div className="flex flex-col space-y-3 md:flex-row md:items-center md:justify-between md:space-y-0">
+            {/* Logo and Title */}
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 bg-primary rounded-lg flex-shrink-0">
+                <Zap className="h-4 w-4 md:h-6 md:w-6 text-primary-foreground" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Project Synapse</h1>
-                <p className="text-sm text-muted-foreground">AI-Powered Delivery Coordination System</p>
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground truncate">Project Synapse</h1>
+                <p className="text-xs md:text-sm text-muted-foreground hidden sm:block">AI-Powered Delivery Coordination System</p>
+                <p className="text-xs text-muted-foreground sm:hidden">AI Delivery System</p>
               </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button 
-                variant={view === 'dashboard' ? 'default' : 'outline'} 
-                size="sm"
-                onClick={() => setView('dashboard')}
-              >
-                <BarChart3 className="h-4 w-4 mr-2" />
-                Dashboard
-              </Button>
-              <Button 
-                variant={view === 'agent' ? 'default' : 'outline'} 
-                size="sm"
-                onClick={() => setView('agent')}
-              >
-                <Bot className="h-4 w-4 mr-2" />
-                Agent Interface
-              </Button>
-              <Badge variant="outline" className="text-emerald-600 border-emerald-200">
-                <Activity className="h-3 w-3 mr-1" />
-                Live
+            
+            {/* Navigation and Status */}
+            <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2 md:space-x-3">
+              {/* Navigation Buttons */}
+              <div className="flex items-center gap-1 sm:gap-2">
+                <Button 
+                  variant={view === 'dashboard' ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => setView('dashboard')}
+                  className="flex-1 sm:flex-none text-xs sm:text-sm px-3 py-2"
+                >
+                  <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">Dashboard</span>
+                  <span className="xs:hidden">Dash</span>
+                </Button>
+                <Button 
+                  variant={view === 'agent' ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => setView('agent')}
+                  className="flex-1 sm:flex-none text-xs sm:text-sm px-3 py-2"
+                >
+                  <Bot className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden xs:inline">Agent</span>
+                  <span className="xs:hidden">AI</span>
+                </Button>
+              </div>
+              
+              {/* Status Badge */}
+              <Badge variant="outline" className="text-emerald-600 border-emerald-200 self-start sm:self-auto whitespace-nowrap">
+                <Activity className="h-3 w-3 mr-1 flex-shrink-0" />
+                <span className="text-xs">Live</span>
               </Badge>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-6">
         {view === 'dashboard' ? <DashboardView /> : <AgentInterface />}
       </div>
     </div>
@@ -131,53 +144,53 @@ function DashboardView() {
       />
 
       {/* Activity and Tool Usage */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 lg:gap-6 xl:grid-cols-2">
         <ActivityMonitor activities={activities} />
         <ToolUsageChart toolUsage={toolUsage} />
       </div>
 
       {/* System Overview */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">System Health</CardTitle>
-            <CardDescription>Overall system performance</CardDescription>
+            <CardTitle className="text-base sm:text-lg">System Health</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Overall system performance</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm">API Response Time</span>
-              <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200">
+              <span className="text-xs sm:text-sm">API Response Time</span>
+              <Badge className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200 text-xs">
                 1.2s
               </Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Uptime</span>
-              <span className="text-sm font-medium">99.9%</span>
+              <span className="text-xs sm:text-sm">Uptime</span>
+              <span className="text-xs sm:text-sm font-medium">99.9%</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Error Rate</span>
-              <span className="text-sm font-medium">0.1%</span>
+              <span className="text-xs sm:text-sm">Error Rate</span>
+              <span className="text-xs sm:text-sm font-medium">0.1%</span>
             </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Today's Summary</CardTitle>
-            <CardDescription>Key metrics for today</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Today's Summary</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Key metrics for today</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Cases Handled</span>
-              <span className="text-sm font-medium">23</span>
+              <span className="text-xs sm:text-sm">Cases Handled</span>
+              <span className="text-xs sm:text-sm font-medium">23</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Tools Executed</span>
-              <span className="text-sm font-medium">67</span>
+              <span className="text-xs sm:text-sm">Tools Executed</span>
+              <span className="text-xs sm:text-sm font-medium">67</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Evidence Collected</span>
-              <span className="text-sm font-medium">12</span>
+              <span className="text-xs sm:text-sm">Evidence Collected</span>
+              <span className="text-xs sm:text-sm font-medium">12</span>
             </div>
           </CardContent>
         </Card>

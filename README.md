@@ -1,19 +1,74 @@
+---
+title: Synapse
+emoji: 🚀
+colorFrom: green
+colorTo: pink
+sdk: docker
+pinned: false
+---
+
 # Project Synapse: Agentic Last-Mile Coordinator
 
 > **🎉 COMPLETE SOLUTION**: Full-stack AI delivery coordination system with Next.js frontend and MCP integration!
 
 Project Synapse is a sophisticated autonomous AI agent designed to intelligently resolve real-time, last-mile delivery disruptions. This version includes a beautiful Next.js frontend, Model Context Protocol (MCP) integration, and comprehensive tooling for delivery coordination.
 
+## 🌐 Live Demo
+
+- **🤖 MCP Server**: [Deployed on Hugging Face Spaces](https://abhash-chakraborty-synapse.hf.space)
+- **🎨 Frontend**: [Deployed on Vercel](https://project-synapse-frontend.vercel.app)
+
+## 🚀 Deployment
+
+### Deploy MCP Server to Hugging Face Spaces
+
+1. **Create a new Space on Hugging Face**:
+   - Go to [Hugging Face Spaces](https://huggingface.co/spaces)
+   - Click "Create new Space"
+   - Choose "Docker" as the Space SDK
+   - Set visibility to "Public"
+
+2. **Clone and push your repository**:
+   ```bash
+   git clone https://github.com/your-username/project-synapse.git
+   cd project-synapse
+   git remote add hf https://huggingface.co/spaces/your-username/project-synapse-mcp
+   git push hf main
+   ```
+
+3. **Configure environment variables** in your Space settings:
+   - `GOOGLE_API_KEY`: Your Google Generative AI API key
+   - `PORT`: 7860 (default for HF Spaces)
+
+### Deploy Frontend to Vercel
+
+1. **Install Vercel CLI** (optional):
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy with Vercel**:
+   ```bash
+   cd frontend
+   vercel
+   ```
+
+3. **Or connect your GitHub repository** to Vercel for automatic deployments:
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Import Project"
+   - Connect your GitHub repository
+   - Set build settings:
+     - Framework: Next.js
+     - Root Directory: `frontend`
+     - Build Command: `npm run build`
+     - Output Directory: `.next`
+
+### Environment Variables for Frontend
+
+Set these in your Vercel project settings:
+- `NEXT_PUBLIC_MCP_SERVER_URL`: URL of your deployed MCP server
+
 ## 🚀 Quick Start
-
-### Automated Start (Recommended)
-```bash
-# Windows
-start.bat
-
-# Linux/Mac
-./start.sh
-```
 
 ### Manual Start
 ```bash
@@ -65,16 +120,35 @@ python -m src.main
 The Next.js frontend provides a comprehensive interface for monitoring and interacting with the AI agent:
 
 ### Dashboard View
+The project features a comprehensive dashboard that provides a real-time overview of the system's performance and key metrics.
+
+![Project Synapse Dashboard](frontend/screenshots/dashboard.jpg)
+
 - **📊 Performance Metrics**: Real-time KPIs and success rates
 - **📈 Tool Usage Analytics**: Visualization of most-used tools
 - **🔄 Activity Monitor**: Live feed of system events
 - **⚡ System Health**: Server status and performance indicators
 
-### Agent Interface  
+### Agent Interface 
+The core of Project Synapse is the AI Agent Interface, where you can describe a delivery disruption scenario and watch the AI agent work through it.
+
+![AI Agent Interface](frontend/screenshots/agent-interface.jpg)
+ 
 - **🤖 Interactive Testing**: Submit custom delivery scenarios
 - **📝 Reasoning Display**: See the agent's thought process
 - **🔧 Tool Execution**: Watch tools being used in real-time
 - **📋 Pre-built Scenarios**: Test common disruption cases
+
+### Execution History and Agent Reasoning
+
+The system keeps a detailed log of each case, including the AI's reasoning and the specific actions it took to resolve the issue. This helps in understanding and auditing the agent's behavior.
+
+![Execution History](frontend/screenshots/execution-history.jpg)
+
+In the example above, a customer's delivery was marked as 'failed'. The AI agent's plan was to:
+
+-  **Verify the delivery attempt:** Check the driver's location and other data to confirm what happened.
+-  **Notify the customer:** Proactively reach out to the customer to reschedule the delivery, providing a clear and helpful message.
 
 ### Sample Scenarios Available
 - Restaurant overload with long prep times

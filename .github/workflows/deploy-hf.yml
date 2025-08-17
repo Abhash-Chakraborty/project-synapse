@@ -1,0 +1,29 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Push to Hugging Face Spaces
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          # Make sure this secret is set in your repo settings to something like 'abhash-chakraborty/Synapse'
+          HF_SPACE_NAME: ${{ secrets.HF_SPACE_NAME }} 
+        run: |
+          git config --global user.email "action@github.com"
+          git config --global user.name "GitHub Action"
+          
+          # This single line handles authentication. The other credential commands are not needed.
+          git remote add hf "https://user:$HF_TOKEN@huggingface.co/spaces/$HF_SPACE_NAME"
+          
+          # Force push the main branch to the space to keep it in sync
+          git push hf main --force

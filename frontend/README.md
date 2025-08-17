@@ -2,6 +2,10 @@
 
 A Next.js frontend for the Project Synapse AI-powered delivery coordination system.
 
+## 🌐 Live Demo
+
+**Deployed Frontend**: [https://project-synapse-frontend.vercel.app](https://project-synapse-frontend.vercel.app)
+
 ## Features
 
 - **Dashboard View**: Real-time monitoring of delivery coordination activities
@@ -10,7 +14,47 @@ A Next.js frontend for the Project Synapse AI-powered delivery coordination syst
 - **Activity Monitor**: Live feed of system events and resolutions
 - **MCP Integration**: Direct connection to Model Context Protocol server
 
-## Setup
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+#### Option 1: Vercel CLI
+```bash
+# Install Vercel CLI globally
+npm install -g vercel
+
+# Deploy from frontend directory
+cd frontend
+vercel
+
+# Follow the prompts to configure your deployment
+```
+
+#### Option 2: GitHub Integration
+1. Push your code to GitHub
+2. Go to [Vercel Dashboard](https://vercel.com/dashboard)
+3. Click "Import Project"
+4. Connect your GitHub repository
+5. Configure build settings:
+   - **Framework**: Next.js
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `.next`
+   - **Install Command**: `npm install`
+
+#### Environment Variables for Production
+Set these in your Vercel project settings:
+
+```bash
+# Required: MCP Server URL
+NEXT_PUBLIC_MCP_SERVER_URL=https://your-space-name.hf.space
+
+# Optional: Analytics and monitoring
+NEXT_PUBLIC_ANALYTICS_ID=your-analytics-id
+NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
+```
+
+### Local Development Setup
 
 1. Install dependencies:
 ```bash

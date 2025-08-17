@@ -25,7 +25,7 @@ class Config:
     # MCP Configuration
     MCP_SERVER_NAME = "synapse-tools"
     MCP_SERVER_VERSION = "1.0.0"
-    MCP_SERVER_PORT = 8000
+    MCP_SERVER_PORT = int(os.getenv("PORT", 8000))
     
     @classmethod
     def validate(cls) -> bool:
